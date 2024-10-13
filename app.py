@@ -13,16 +13,12 @@ import qrcode
 import io
 import base64
 from flask_cors import CORS
-from flask import jsonify, request
+from flask import jsonify
 from flask_migrate import Migrate
-
-
-
 
 app = Flask(__name__)
 CORS(app)
-#app.config['SECRET_KEY'] = 'your_secret_key'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///parking.db'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -37,15 +33,13 @@ SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
 # Email configuration (using Gmail SMTP with App Password)
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
-#SMTP_USERNAME = 'systemparkingowy0@gmail.com'
-#SMTP_PASSWORD = 'uueo qlvi dsun gltd'  # Use your generated App Password here
 
 # JWT Helper Functions
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        print(f"Request headers: {request.headers}")  # Add this line to debug headers
+        print(f"Request headers: {request.headers}")  # Debug headers
 
         if 'Authorization' in request.headers:
             token = request.headers['Authorization'].split(" ")[1]
@@ -71,7 +65,7 @@ def token_required(f):
 def api_or_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Check if the request is coming from an API (likely Flutter) or a web browser
+        # Check if the request is coming from an API or a web browser
         if request.headers.get('Accept') == 'application/json':
             # Use token authentication for API requests
             return token_required(f)(*args, **kwargs)
@@ -80,10 +74,8 @@ def api_or_login_required(f):
             if current_user.is_authenticated:
                 return f(current_user, *args, **kwargs)
             else:
-                return redirect(url_for('login'))  # Redirect to login if user is not authenticated
+                return redirect(url_for('login'))
     return decorated_function
-
-
 
 # Route to serve CSS files
 @app.route('/styles/<path:filename>')
@@ -137,7 +129,6 @@ class ParkingSession(db.Model):
     exit_time = db.Column(db.DateTime)
     user = db.relationship('User', backref=db.backref('sessions', lazy=True))
 
-
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -146,10 +137,19 @@ class Notification(db.Model):
     user = db.relationship('User', backref=db.backref('notifications', lazy=True))
     spot = db.relationship('ParkingSpot', backref=db.backref('notifications', lazy=True))
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, int(user_id))
+
+# Initialize ParkingSpot records before the first request
+@app.before_first_request
+def initialize_parking_spots():
+    with app.app_context():
+        if ParkingSpot.query.first() is None:
+            for i in range(10):
+                db.session.add(ParkingSpot(id=i+1, status='Free'))
+            db.session.commit()
+            print("Initialized ParkingSpot records.")
 
 @app.route('/index')
 def index():
@@ -190,7 +190,6 @@ def register():
 
     return render_template('register.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -225,7 +224,6 @@ def login():
 
     return render_template('login.html')
 
-
 @app.route('/logout')
 @login_required
 def logout():
@@ -238,9 +236,13 @@ def update():
         status = request.args.get(f'sensor{i}')
         if status is not None:
             spot = db.session.get(ParkingSpot, i+1)
-            spot.status = 'Occupied' if status == '1' else 'Free'
-            db.session.commit()
-	    
+            if spot:
+                spot.status = 'Occupied' if status == '1' else 'Free'
+                db.session.add(spot)  # Add spot back to session
+            else:
+                # If spot doesn't exist, create it
+                spot = ParkingSpot(id=i+1, status='Occupied' if status == '1' else 'Free')
+                db.session.add(spot)
             # Check for notifications
             if spot.status == 'Free':
                 notifications = Notification.query.filter_by(spot_id=spot.id, notified=False).all()
@@ -249,10 +251,9 @@ def update():
                     if user and user.email:
                         send_email(user.email, 'Parking Spot Available', f'Spot {spot.id} is now free!')
                         notification.notified = True
-                        db.session.commit()
-                    flash(f"Spot {spot.id} is now free! Email sent to {user.email}", "success")
+                        db.session.add(notification)
+            db.session.commit()
     return "Status received"
-
 
 @app.route('/status', methods=['GET'])
 def status():
@@ -263,7 +264,6 @@ def status():
         return jsonify(spots_data)
     else:
         return render_template('status.html', spots=spots)
-
 
 @app.route('/generate_qr', methods=['GET'])
 @api_or_login_required
@@ -282,8 +282,6 @@ def generate_qr(current_user):
     else:
         return render_template('qr_code.html', qr_code=qr_code_data)
 
-
-
 @app.route('/qr_scan', methods=['POST'])
 def qr_scan():
     try:
@@ -296,7 +294,7 @@ def qr_scan():
 
         if active_session:
             # End the session
-            active_session.exit_time = datetime.now()  # Ensure this works now
+            active_session.exit_time = datetime.now()
             db.session.commit()
             duration = active_session.exit_time - active_session.entry_time
             user.current_qr = None
@@ -304,7 +302,7 @@ def qr_scan():
             return jsonify({'message': 'Session ended', 'duration': str(duration)})
         else:
             # Start a new session
-            entry_time = datetime.now()  # Correct datetime usage
+            entry_time = datetime.now()
             session = ParkingSession(user_id=user.id, entry_time=entry_time)
             db.session.add(session)
             db.session.commit()
@@ -313,7 +311,6 @@ def qr_scan():
     except Exception as e:
         print(f"An error occurred: {e}")
         return jsonify({'error': 'An internal server error occurred'}), 500
-
 
 @app.route('/sesje')
 @login_required
@@ -333,7 +330,6 @@ def notify(spot_id):
     else:
         flash('This spot is already free or does not exist.', 'warning')
     return redirect(url_for('status'))
-    
     
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -362,15 +358,6 @@ def add_vehicle():
     db.session.commit()
     flash('Vehicle added successfully!', 'success')
     return redirect(url_for('profile'))
-    
-
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        # Add parking spots to the database (once, comment after the first run)
-        for i in range(10):
-            if db.session.get(ParkingSpot, i+1) is None:
-                db.session.add(ParkingSpot(id=i+1, status='Free'))
-        db.session.commit()
     app.run(host='0.0.0.0', port=5000)
