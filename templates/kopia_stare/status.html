@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status miejsc parkingowych</title>
+</head>
+<body>
+    <h1>Status miejsc parkingowych</h1>
+    <table border="1">
+        <tr>
+            <th>#</th>
+            <th>Status</th>
+            <th>Akcja</th>
+        </tr>
+        {% for spot in spots %}
+        <tr>
+            <td>{{ spot.id }}</td>
+            <td>{{ spot.status }}</td>
+            <td>
+                {% if spot.status == 'Occupied' %}
+                <form action="{{ url_for('notify', spot_id=spot.id) }}" method="post">
+                    <button type="submit">Notify me when free</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
+

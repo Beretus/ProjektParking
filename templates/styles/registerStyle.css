@@ -1,0 +1,199 @@
+/* Resetowanie domyślnych stylów */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Stylowanie ciała */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* alerty */
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+
+/* Stylowanie nawigacji */
+.nav-menu {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* Stylowanie tytułu */
+.nav-menu .title {
+    font-size: 24px;
+    color: #333;
+    text-decoration: none;
+}
+
+/* Stylowanie menu */
+.nav-menu .menu {
+    display: flex;
+}
+
+.nav-menu .menu ul {
+    list-style: none;
+    display: flex;
+}
+
+/* Stylowanie linków w menu */
+.nav-menu .menu-link {
+    margin-left: 20px;
+    font-size: 16px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Stylowanie linków w menu na hover */
+.nav-menu .menu-link:hover {
+    color: #000;
+}
+
+/* Stylowanie przycisku hamburgera */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 10px;
+}
+
+.hamburger .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 4px 0;
+    transition: 0.3s;
+}
+
+/* Stylowanie aktywnego menu */
+.nav-menu .menu.active {
+    display: block;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.nav-menu .menu.active ul {
+    flex-direction: column;
+}
+
+.nav-menu .menu.active .menu-link {
+    margin: 10px 0;
+}
+
+/* Stylowanie kontenera z zawartością */
+.content-container {
+    text-align: center;
+    margin-top: 50px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Stylowanie kontenera logowania */
+.login-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+/* Stylowanie formularza */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Stylowanie stopki */
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 5rem;
+}
+
+.footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries dla responsywności */
+@media (max-width: 768px) {
+    .nav-menu .menu {
+        display: none;
+    }
+    
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu .menu.active {
+        width: 100%;
+        left: 0;
+    }
+}

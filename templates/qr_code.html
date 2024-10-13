@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your QR Code</title>
+    <link rel="stylesheet" href="styles/qrStyle.css">
+</head>
+<body>
+    <nav class="nav-menu">
+        <a class="title">Parking System</a>
+        <button class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="menu" id="nav-menu">
+            <ul>
+                <li class="menu-link">Home</li>
+                <li class="menu-link">Status</li>
+                <li class="menu-link">Sessions</li>
+                <li class="menu-link">QR Code</li>
+                <li class="menu-link">Available Spots</li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <div class="qr-container text-center">
+            <h2>Your QR Code</h2>
+            <p>Scan this QR code to start or end your parking session:</p>
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid">
+            <p class="mt-3"><a href="{{ url_for('status') }}" class="btn btn-primary btn-block">Back to Parking Status</a></p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Parking System. All rights reserved.</p>
+            <p><a href="https://example.com/privacy-policy">Privacy Policy</a> | <a href="https://example.com/terms-of-service">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

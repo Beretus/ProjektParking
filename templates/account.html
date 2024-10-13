@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account</title>
+</head>
+<body>
+    <h2>Your Account</h2>
+    <form action="/account" method="post">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" value="{{ user.email }}"><br>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

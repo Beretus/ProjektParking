@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesje Parkingowe</title>
+    <link rel="stylesheet" href="styles/sesjeStyle.css">
+</head>
+<body>
+    <nav class="nav-menu">
+        <a class="title">Parking System</a>
+        <button class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="menu" id="nav-menu">
+            <ul>
+                {% if not current_user.is_authenticated %}
+                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                {% else %}
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}"></a>QR Code</li>
+                <li class="menu-link"><a href="{{ url_for('status') }}"></a>Available Spots</li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <h1 class="text-center">Twoje Sesje Parkingowe</h1>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Czas Wjazdu</th>
+                    <th>Czas Wyjazdu</th>
+                    <th>Trwanie</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <!-- Przykładowe dane, zastąp zmiennymi serwera -->
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ session.entry_time }}</td>
+                    <td>{{ session.exit_time if session.exit_time else 'Sesja aktywna' }}</td>
+                    <td>
+                        {% if session.exit_time %}
+                        {{ (session.exit_time - session.entry_time) }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                
+                {% endfor %}
+                <!-- Dodaj więcej wierszy tutaj -->
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Parking System. All rights reserved.</p>
+            <p><a href="https://example.com/privacy-policy">Privacy Policy</a> | <a href="https://example.com/terms-of-service">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

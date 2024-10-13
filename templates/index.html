@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking System</title>
+    <link rel="stylesheet" href="styles/indexStyle.css">
+</head>
+<body>
+    <nav class="nav-menu">
+        <a class="title">Parking System</a>
+        <button class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="menu" id="nav-menu">
+            <ul>
+                {% if not current_user.is_authenticated %}
+                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                {% else %}
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}"></a>QR Code</li>
+                <li class="menu-link"><a href="{{ url_for('status') }}"></a>Available Spots</li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="header-container">
+        <h1>Manage your car parking sessions effortlessly.</h1>
+        <img src="img/car-parking.jpg" alt="cars on parking" class="rounded-image">
+    </div>
+
+    <div class="content-container">
+        <h2>How it works?</h2>
+        <div class="step-container">
+            <div class="step">
+                <div class="step-text">
+                    <p>You need to register/login yourself</p>
+                </div>
+            </div>
+            <div class="step step-image" style="background-image: url('img/register.jpg');"></div>
+            <div class="step">
+                <div class="step-text">
+                    <p>Generate QR code to open/close gate</p>
+                </div>
+            </div>
+            <div class="step step-image" style="background-image: url('img/qrcode.jpg');"></div>
+            <div class="step">
+                <div class="step-text">
+                    <p>Scan QR code</p>
+                </div>
+            </div>
+            <div class="step step-image" style="background-image: url('img/scanqr.jpg');"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Parking System. All rights reserved.</p>
+            <p><a href="https://example.com/privacy-policy">Privacy Policy</a> | <a href="https://example.com/terms-of-service">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

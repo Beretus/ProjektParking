@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('styles', filename='profileStyle.css') }}">
+</head>
+<body>
+    <nav class="nav-menu">
+        <a class="title">Parking System</a>
+        <button class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="menu" id="nav-menu">
+            <ul>
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">QR Code</a></li>
+                <li class="menu-link"><a href="{{ url_for('status') }}">Available Spots</a></li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <h1 class="text-center">User Profile</h1>
+        <form method="POST">
+            <h2>Personal Information</h2>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="{{ current_user.first_name }}">
+            
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ current_user.last_name }}">
+            
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" value="{{ current_user.phone_number }}">
+            
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="{{ current_user.address }}">
+            
+            <button type="submit" class="btn">Update Profile</button>
+        </form>
+
+        <h2>Vehicle Information</h2>
+        <form method="POST" action="{{ url_for('add_vehicle') }}">
+            <label for="model">Vehicle Model:</label>
+            <input type="text" id="model" name="model" required>
+            
+            <label for="license_plate">License Plate:</label>
+            <input type="text" id="license_plate" name="license_plate" required>
+            
+            <label for="color">Color:</label>
+            <input type="text" id="color" name="color">
+            
+            <button type="submit" class="btn">Add Vehicle</button>
+        </form>
+        
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Model</th>
+                    <th>License Plate</th>
+                    <th>Color</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ vehicle.model }}</td>
+                    <td>{{ vehicle.license_plate }}</td>
+                    <td>{{ vehicle.color }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Parking History</h2>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Entry Time</th>
+                    <th>Exit Time</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ session.entry_time }}</td>
+                    <td>{{ session.exit_time if session.exit_time else 'Active Session' }}</td>
+                    <td>
+                        {% if session.exit_time %}
+                        {{ (session.exit_time - session.entry_time) }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Parking System. All rights reserved.</p>
+            <p><a href="https://example.com/privacy-policy">Privacy Policy</a> | <a href="https://example.com/terms-of-service">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status miejsc parkingowych</title>
+    <link rel="stylesheet" href="styles/statusStyle.css">
+</head>
+<body>
+    <nav class="nav-menu">
+        <a class="title">Parking System</a>
+        <button class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <div class="menu" id="nav-menu">
+            <ul>
+                {% if not current_user.is_authenticated %}
+                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                {% else %}
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}"></a>QR Code</li>
+                <li class="menu-link"><a href="{{ url_for('status') }}"></a>Available Spots</li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content-container">
+        <h1>Status miejsc parkingowych</h1>
+        <div class="step-container">
+            <!-- Przykładowe dane, zastąp zmiennymi serwera -->
+            {% for spot in spots %}
+            <div class="spot">
+            <p>{{ spot.id }}</p>
+            {% if spot.status == 'Occupied' %}
+            <span class="icon occupied">&#128663;</span> <!-- Ikona samochodu dla zajętego miejsca -->
+            <form action="{{ url_for('notify', spot_id=spot.id) }}" method="post">
+                <button type="submit" class="btn">Notify me when free</button>
+            </form>
+            {% else %}
+            <span class="icon free">&#128664;</span>
+            {% endif %}
+        </div>
+            {% endfor %}
+            <!-- Dodaj więcej elementów kroków tutaj -->
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2024 Parking System. All rights reserved.</p>
+            <p><a href="https://example.com/privacy-policy">Privacy Policy</a> | <a href="https://example.com/terms-of-service">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
