@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 psycopg2-binary==2.9.7
+=======
+>>>>>>> 83bd2659c12a1eacf26c3afb0d01eeaf047c8d6f
 click==8.1.7
 email-validator==2.1.0.post1
 Flask==3.0.0
