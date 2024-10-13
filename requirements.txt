@@ -93,7 +93,6 @@ pycairo==1.16.2
 pycodestyle==2.6.0
 pycups==2.0.1
 pyflakes==2.2.0
-pygame==1.9.6
 Pygments==2.7.1
 PyGObject==3.38.0
 pyinotify==0.9.6
