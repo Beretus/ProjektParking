@@ -1,7 +1,6 @@
 alembic==1.13.1
 anyio==4.3.0
 appdirs==1.4.4
-arandr==0.1.10
 astroid==2.5.1
 psycopg2-binary
 asttokens==2.0.4
