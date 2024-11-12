@@ -141,7 +141,12 @@ class Notification(db.Model):
 def load_user(user_id):
     return db.session.get(User, int(user_id))
 
-
+with app.app_context():
+    if ParkingSpot.query.first() is None:
+        for i in range(10):
+            db.session.add(ParkingSpot(id=i+1, status='Free'))
+        db.session.commit()
+        print("Initialized ParkingSpot records.")
 
 @app.route('/index')
 def index():
