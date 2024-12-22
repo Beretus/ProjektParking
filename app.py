@@ -316,17 +316,23 @@ def qr_scan():
 #    return render_template('sesje.html', sessions=sessions)
 
 @app.route('/sesje', methods=['GET'])
-@token_required
+@api_or_login_required
 def user_sessions(current_user):
     sessions = ParkingSession.query.filter_by(user_id=current_user.id).order_by(ParkingSession.entry_time.desc()).all()
-    sessions_data = [
-        {
-            "entry_time": session.entry_time.isoformat(),
-            "exit_time": session.exit_time.isoformat() if session.exit_time else None
-        }
-        for session in sessions
-    ]
-    return jsonify(sessions_data)
+
+    if request.headers.get('Accept') == 'application/json':
+        sessions_data = [
+            {
+                "entry_time": session.entry_time.isoformat(),
+                "exit_time": session.exit_time.isoformat() if session.exit_time else None,
+                "duration": str(session.exit_time - session.entry_time) if session.exit_time else "Active"
+            }
+            for session in sessions
+        ]
+        return jsonify(sessions_data)
+    else:
+        return render_template('sesje.html', sessions=sessions)
+
 
 @app.route('/notify/<int:spot_id>', methods=['POST'])
 @login_required
