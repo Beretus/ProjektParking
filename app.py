@@ -363,7 +363,6 @@ def profile():
     print(f"Headers: {request.headers}")
     print(f"Token: {request.headers.get('Authorization')}")
     if request.method == 'GET':
-        if request.headers.get('Accept') == 'application/json':
             user_data = {
                 'first_name': current_user.first_name,
                 'last_name': current_user.last_name,
