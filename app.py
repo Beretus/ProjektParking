@@ -363,13 +363,13 @@ def notify(spot_id):
 #    sessions = ParkingSession.query.filter_by(user_id=current_user.id).all()
 #    return render_template('profile.html', vehicles=vehicles, sessions=sessions)
 
-@app.route('/profile', methods=['GET', 'POST'])
-@token_required
-def profile():
+@app.route('/profile', methods=['GET'])
+@api_or_login_required
+def profile(current_user):
+    print(f"Current User: {current_user}")
     print(f"Headers: {request.headers}")
-    print(f"Token from Authorization: {request.headers.get('Authorization')}")
-
-    if request.method == 'GET':
+    
+    try:
         user_data = {
             'first_name': current_user.first_name,
             'last_name': current_user.last_name,
@@ -384,8 +384,15 @@ def profile():
                 for s in current_user.sessions
             ],
         }
-        return jsonify(user_data), 200
-    return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
+
+        if request.headers.get('Accept') == 'application/json':
+            return jsonify(user_data), 200
+        else:
+            return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
+    except Exception as e:
+        print(f"Error in /profile: {e}")
+        return jsonify({'message': 'Internal Server Error'}), 500
+
 
 
 @app.route('/add_vehicle', methods=['POST'])
