@@ -361,25 +361,26 @@ def notify(spot_id):
 @login_required
 def profile():
     print(f"Headers: {request.headers}")
-    print(f"Token: {request.headers.get('Authorization')}")
+    print(f"Token from Authorization: {request.headers.get('Authorization')}")
+
     if request.method == 'GET':
-            user_data = {
-                'first_name': current_user.first_name,
-                'last_name': current_user.last_name,
-                'phone_number': current_user.phone_number,
-                'address': current_user.address,
-                'vehicles': [
-                    {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
-                    for v in current_user.vehicles
-                ],
-                'sessions': [
-                    {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
-                    for s in current_user.sessions
-                ],
-            }
-            return jsonify(user_data), 200
-    else:
-        return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
+        user_data = {
+            'first_name': current_user.first_name,
+            'last_name': current_user.last_name,
+            'phone_number': current_user.phone_number,
+            'address': current_user.address,
+            'vehicles': [
+                {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+                for v in current_user.vehicles
+            ],
+            'sessions': [
+                {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+                for s in current_user.sessions
+            ],
+        }
+        return jsonify(user_data), 200
+    return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
+
 
 @app.route('/add_vehicle', methods=['POST'])
 @login_required
