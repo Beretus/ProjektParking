@@ -358,7 +358,7 @@ def notify(spot_id):
 #    return render_template('profile.html', vehicles=vehicles, sessions=sessions)
 
 @app.route('/profile', methods=['GET', 'POST'])
-@login_required
+@api_or_login_required
 def profile():
     print(f"Headers: {request.headers}")
     print(f"Token from Authorization: {request.headers.get('Authorization')}")
