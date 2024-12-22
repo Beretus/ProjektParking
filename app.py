@@ -378,8 +378,8 @@ def profile():
                 ],
             }
             return jsonify(user_data), 200
-        else:
-            return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
+    else:
+        return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
 
 @app.route('/add_vehicle', methods=['POST'])
 @login_required
