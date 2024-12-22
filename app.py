@@ -317,7 +317,7 @@ def qr_scan():
 
 @app.route('/sesje', methods=['GET'])
 @api_or_login_required
-def user_sessions(current_user):
+def sesje(current_user):
     sessions = ParkingSession.query.filter_by(user_id=current_user.id).order_by(ParkingSession.entry_time.desc()).all()
 
     if request.headers.get('Accept') == 'application/json':
