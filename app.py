@@ -341,21 +341,42 @@ def notify(spot_id):
         flash('This spot is already free or does not exist.', 'warning')
     return redirect(url_for('status'))
     
+#@app.route('/profile', methods=['GET', 'POST'])
+#@login_required
+#def profile():
+#    if request.method == 'POST':
+#        current_user.first_name = request.form['first_name']
+#        current_user.last_name = request.form['last_name']
+#        current_user.phone_number = request.form['phone_number']
+#        current_user.address = request.form['address']
+#        db.session.commit()
+#        flash('Profile updated successfully!', 'success')
+#        return redirect(url_for('profile'))
+#    
+#    vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
+#    sessions = ParkingSession.query.filter_by(user_id=current_user.id).all()
+#    return render_template('profile.html', vehicles=vehicles, sessions=sessions)
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    if request.method == 'POST':
-        current_user.first_name = request.form['first_name']
-        current_user.last_name = request.form['last_name']
-        current_user.phone_number = request.form['phone_number']
-        current_user.address = request.form['address']
-        db.session.commit()
-        flash('Profile updated successfully!', 'success')
-        return redirect(url_for('profile'))
-    
-    vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
-    sessions = ParkingSession.query.filter_by(user_id=current_user.id).all()
-    return render_template('profile.html', vehicles=vehicles, sessions=sessions)
+    if request.headers.get('Accept') == 'application/json':
+        user_data = {
+            'first_name': current_user.first_name,
+            'last_name': current_user.last_name,
+            'phone_number': current_user.phone_number,
+            'address': current_user.address,
+            'vehicles': [
+                {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+                for v in current_user.vehicles
+            ],
+            'sessions': [
+                {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+                for s in current_user.sessions
+            ],
+        }
+        return jsonify(user_data)
+    return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
 
 @app.route('/add_vehicle', methods=['POST'])
 @login_required
