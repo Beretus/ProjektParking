@@ -309,11 +309,24 @@ def qr_scan():
         print(f"An error occurred: {e}")
         return jsonify({'error': 'An internal server error occurred'}), 500
 
-@app.route('/sesje')
-@login_required
-def sesje():
-    sessions = ParkingSession.query.filter_by(user_id=current_user.id).all()
-    return render_template('sesje.html', sessions=sessions)
+#@app.route('/sesje')
+#@login_required
+#def sesje():
+#    sessions = ParkingSession.query.filter_by(user_id=current_user.id).all()
+#    return render_template('sesje.html', sessions=sessions)
+
+@app.route('/sesje', methods=['GET'])
+@token_required
+def user_sessions(current_user):
+    sessions = ParkingSession.query.filter_by(user_id=current_user.id).order_by(ParkingSession.entry_time.desc()).all()
+    sessions_data = [
+        {
+            "entry_time": session.entry_time.isoformat(),
+            "exit_time": session.exit_time.isoformat() if session.exit_time else None
+        }
+        for session in sessions
+    ]
+    return jsonify(sessions_data)
 
 @app.route('/notify/<int:spot_id>', methods=['POST'])
 @login_required
