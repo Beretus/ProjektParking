@@ -400,6 +400,12 @@ def profile(current_user):
     if request.method == 'POST':
         try:
             data = request.get_json()
+            print(f"Received data: {data}")  # Logowanie danych
+            print(f"Current user: {current_user}")  # Logowanie użytkownika
+
+            if not data:
+                return jsonify({'message': 'No data provided'}), 400
+
             current_user.first_name = data.get('first_name', current_user.first_name)
             current_user.last_name = data.get('last_name', current_user.last_name)
             current_user.phone_number = data.get('phone_number', current_user.phone_number)
@@ -423,8 +429,9 @@ def profile(current_user):
             }
             return jsonify({'message': 'Profile updated successfully!', 'profile': user_data}), 200
         except Exception as e:
-            print(f"Error updating profile: {e}")
+            print(f"Error in updating profile: {e}")  # Logowanie błędu
             return jsonify({'message': 'Failed to update profile'}), 500
+
 
     # Return profile details for GET request
     user_data = {
