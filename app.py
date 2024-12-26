@@ -406,12 +406,27 @@ def profile(current_user):
             current_user.address = data.get('address', current_user.address)
             db.session.commit()
 
-            return jsonify({'message': 'Profile updated successfully!'}), 200
+            # Return updated profile data
+            user_data = {
+                'first_name': current_user.first_name,
+                'last_name': current_user.last_name,
+                'phone_number': current_user.phone_number,
+                'address': current_user.address,
+                'vehicles': [
+                    {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+                    for v in current_user.vehicles
+                ],
+                'sessions': [
+                    {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+                    for s in current_user.sessions
+                ],
+            }
+            return jsonify({'message': 'Profile updated successfully!', 'profile': user_data}), 200
         except Exception as e:
             print(f"Error updating profile: {e}")
             return jsonify({'message': 'Failed to update profile'}), 500
 
-    # Return profile details if the method is GET
+    # Return profile details for GET request
     user_data = {
         'first_name': current_user.first_name,
         'last_name': current_user.last_name,
@@ -428,6 +443,8 @@ def profile(current_user):
     }
 
     return jsonify(user_data), 200
+
+
 
 
 
