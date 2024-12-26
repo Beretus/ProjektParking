@@ -491,17 +491,53 @@ def profile(current_user):
 
 
 
+# @app.route('/add_vehicle', methods=['POST'])
+# @login_required
+# def add_vehicle():
+#     model = request.form['model']
+#     license_plate = request.form['license_plate']
+#     color = request.form['color']
+#     new_vehicle = Vehicle(user_id=current_user.id, model=model, license_plate=license_plate, color=color)
+#     db.session.add(new_vehicle)
+#     db.session.commit()
+#     flash('Vehicle added successfully!', 'success')
+#     return redirect(url_for('profile'))
+
 @app.route('/add_vehicle', methods=['POST'])
-@login_required
-def add_vehicle():
-    model = request.form['model']
-    license_plate = request.form['license_plate']
-    color = request.form['color']
-    new_vehicle = Vehicle(user_id=current_user.id, model=model, license_plate=license_plate, color=color)
-    db.session.add(new_vehicle)
-    db.session.commit()
-    flash('Vehicle added successfully!', 'success')
-    return redirect(url_for('profile'))
+@api_or_login_required
+def add_vehicle(current_user):
+    try:
+        data = request.get_json()
+        print(f"Adding vehicle: {data}")
+
+        # Weryfikacja danych wejściowych
+        model = data.get('model')
+        license_plate = data.get('license_plate')
+        color = data.get('color')
+
+        if not model or not license_plate:
+            return jsonify({'message': 'Model and license plate are required'}), 400
+
+        # Tworzenie nowego pojazdu
+        new_vehicle = Vehicle(
+            user_id=current_user.id,
+            model=model,
+            license_plate=license_plate,
+            color=color
+        )
+        db.session.add(new_vehicle)
+        db.session.commit()
+
+        # Zwracanie zaktualizowanej listy pojazdów
+        vehicles = [
+            {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+            for v in current_user.vehicles
+        ]
+        return jsonify({'message': 'Vehicle added successfully!', 'vehicles': vehicles}), 200
+    except Exception as e:
+        print(f"Error adding vehicle: {e}")
+        return jsonify({'message': 'Failed to add vehicle'}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
