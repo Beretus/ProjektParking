@@ -62,20 +62,56 @@ def token_required(f):
         return f(user_from_token, *args, **kwargs)
     return decorated
 
+# def api_or_login_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         # Check if the request is coming from an API or a web browser
+#         if request.headers.get('Accept') == 'application/json':
+#             # Use token authentication for API requests
+#             return token_required(f)(*args, **kwargs)
+#         else:
+#             # Use session authentication for web requests
+#             if current_user.is_authenticated:
+#                 return f(current_user, *args, **kwargs)
+#             else:
+#                 return redirect(url_for('login'))
+#     return decorated_function
+
+
+
 def api_or_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Check if the request is coming from an API or a web browser
-        if request.headers.get('Accept') == 'application/json':
-            # Use token authentication for API requests
-            return token_required(f)(*args, **kwargs)
-        else:
-            # Use session authentication for web requests
-            if current_user.is_authenticated:
-                return f(current_user, *args, **kwargs)
-            else:
-                return redirect(url_for('login'))
+        # Debugowanie nagłówków
+        print(f"Request Headers: {request.headers}")
+
+        # Sprawdzanie tokena JWT w nagłówku Authorization
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization'].split(" ")[1]
+            print(f"Received Token: {token}")
+            try:
+                data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+                user = User.query.get(data['user_id'])
+                if user:
+                    return f(user, *args, **kwargs)
+            except jwt.ExpiredSignatureError:
+                print("Token has expired")
+                return jsonify({'message': 'Token has expired'}), 401
+            except jwt.InvalidTokenError as e:
+                print(f"Invalid token: {e}")
+                return jsonify({'message': 'Invalid token'}), 401
+
+        # Fallback to session-based login
+        if current_user.is_authenticated:
+            return f(current_user, *args, **kwargs)
+
+        # Jeśli użytkownik nie jest zalogowany
+        return jsonify({'message': 'Unauthorized'}), 401
     return decorated_function
+
+
+
+
 
 # Route to serve CSS files
 @app.route('/styles/<path:filename>')
