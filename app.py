@@ -363,35 +363,71 @@ def notify(spot_id):
 #    sessions = ParkingSession.query.filter_by(user_id=current_user.id).all()
 #    return render_template('profile.html', vehicles=vehicles, sessions=sessions)
 
-@app.route('/profile', methods=['GET'])
+# @app.route('/profile', methods=['GET'])
+# @api_or_login_required
+# def profile(current_user):
+#     print(f"Current User: {current_user}")
+#     print(f"Headers: {request.headers}")
+    
+#     try:
+#         user_data = {
+#             'first_name': current_user.first_name,
+#             'last_name': current_user.last_name,
+#             'phone_number': current_user.phone_number,
+#             'address': current_user.address,
+#             'vehicles': [
+#                 {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+#                 for v in current_user.vehicles
+#             ],
+#             'sessions': [
+#                 {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+#                 for s in current_user.sessions
+#             ],
+#         }
+
+#         if request.headers.get('Accept') == 'application/json':
+#             return jsonify(user_data), 200
+#         else:
+#             return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
+#     except Exception as e:
+#         print(f"Error in /profile: {e}")
+#         return jsonify({'message': 'Internal Server Error'}), 500
+
+
+@app.route('/profile', methods=['GET', 'POST'])
 @api_or_login_required
 def profile(current_user):
-    print(f"Current User: {current_user}")
-    print(f"Headers: {request.headers}")
-    
-    try:
-        user_data = {
-            'first_name': current_user.first_name,
-            'last_name': current_user.last_name,
-            'phone_number': current_user.phone_number,
-            'address': current_user.address,
-            'vehicles': [
-                {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
-                for v in current_user.vehicles
-            ],
-            'sessions': [
-                {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
-                for s in current_user.sessions
-            ],
-        }
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            current_user.first_name = data.get('first_name', current_user.first_name)
+            current_user.last_name = data.get('last_name', current_user.last_name)
+            current_user.phone_number = data.get('phone_number', current_user.phone_number)
+            current_user.address = data.get('address', current_user.address)
+            db.session.commit()
 
-        if request.headers.get('Accept') == 'application/json':
-            return jsonify(user_data), 200
-        else:
-            return render_template('profile.html', vehicles=current_user.vehicles, sessions=current_user.sessions)
-    except Exception as e:
-        print(f"Error in /profile: {e}")
-        return jsonify({'message': 'Internal Server Error'}), 500
+            return jsonify({'message': 'Profile updated successfully!'}), 200
+        except Exception as e:
+            print(f"Error updating profile: {e}")
+            return jsonify({'message': 'Failed to update profile'}), 500
+
+    # Return profile details if the method is GET
+    user_data = {
+        'first_name': current_user.first_name,
+        'last_name': current_user.last_name,
+        'phone_number': current_user.phone_number,
+        'address': current_user.address,
+        'vehicles': [
+            {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+            for v in current_user.vehicles
+        ],
+        'sessions': [
+            {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+            for s in current_user.sessions
+        ],
+    }
+
+    return jsonify(user_data), 200
 
 
 
