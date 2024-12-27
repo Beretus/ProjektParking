@@ -21,8 +21,8 @@
                 <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
                 {% else %}
                 <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
-                <li class="menu-link"><a href="{{ url_for('generate_qr') }}"></a>QR Code</li>
-                <li class="menu-link"><a href="{{ url_for('status') }}"></a>Available Spots</li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">QR Code</a></li>
+                <li class="menu-link"><a href="{{ url_for('status') }}">Available Spots</a></li>
                 <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% endif %}
             </ul>
