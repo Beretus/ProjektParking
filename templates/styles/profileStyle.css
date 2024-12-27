@@ -1,86 +1,210 @@
-body {
-    font-family: Arial, sans-serif;
+/* Resetowanie domyślnych stylów */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
 }
 
+/* Stylowanie ciała */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Stylowanie nawigacji */
 .nav-menu {
-    background-color: #333;
-    color: white;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .nav-menu .title {
     font-size: 24px;
-    font-weight: bold;
+    color: #333;
+    text-decoration: none;
 }
 
 .nav-menu .menu {
-    display: none;
+    display: flex;
 }
 
-.nav-menu .menu.active {
-    display: block;
+.nav-menu .menu ul {
+    list-style: none;
+    display: flex;
 }
 
-.hamburger {
+.nav-menu .menu-link {
+    margin-left: 20px;
+    font-size: 16px;
+    color: #666;
     cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-menu .menu-link:hover {
+    color: #000;
+}
+
+/* Stylowanie przycisku hamburgera */
+.hamburger {
     display: none;
+    flex-direction: column;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 10px;
 }
 
 .hamburger .bar {
-    display: block;
     width: 25px;
     height: 3px;
-    margin: 4px;
-    background-color: white;
-}
-
-.content-container {
-    padding: 20px;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th, .table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.table th {
     background-color: #333;
-    color: white;
+    margin: 4px 0;
+    transition: 0.3s;
+}
+
+/* Stylowanie aktywnego menu */
+.nav-menu .menu.active {
+    display: block;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.nav-menu .menu.active ul {
+    flex-direction: column;
+}
+
+.nav-menu .menu.active .menu-link {
+    margin: 10px 0;
+}
+
+/* Stylowanie kontenera z zawartością */
+.content-container {
+    text-align: center;
+    margin-top: 50px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.content-container h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Stylowanie formularzy */
+.form-section {
+    margin: 20px 0;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .btn {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
+    background-color: #ffc107;
+    color: #333;
     border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-    background-color: #555;
+    background-color: #e0a800;
 }
 
+/* Stylowanie tabel */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background-color: #333;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+/* Stylowanie stopki */
 .footer {
     background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    bottom: 0;
+    color: #fff;
+    padding: 20px 0;
     width: 100%;
+    text-align: center;
+    margin-top: 5rem;
+}
+
+.footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Media Queries dla responsywności */
+@media (max-width: 768px) {
+    .nav-menu .menu {
+        display: none;
+    }
+    
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu .menu.active {
+        width: 100%;
+        left: 0;
+    }
 }
