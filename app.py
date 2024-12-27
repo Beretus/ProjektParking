@@ -370,18 +370,46 @@ def sesje(current_user):
         return render_template('sesje.html', sessions=sessions)
 
 
+
 @app.route('/notify/<int:spot_id>', methods=['POST'])
-@login_required
-def notify(spot_id):
+@api_or_login_required
+def notify(current_user, spot_id):
     spot = db.session.get(ParkingSpot, spot_id)
     if spot and spot.status == 'Occupied':
+        # Dodaj powiadomienie do bazy danych
         new_notification = Notification(user_id=current_user.id, spot_id=spot_id)
         db.session.add(new_notification)
         db.session.commit()
-        flash('You will be notified when the spot is free.', 'info')
+        
+        # Sprawdź, czy żądanie jest API lub strona WWW
+        if request.headers.get('Accept') == 'application/json':
+            return jsonify({'message': 'You will be notified when the spot is free.'}), 200
+        else:
+            flash('You will be notified when the spot is free.', 'info')
+            return redirect(url_for('status'))
     else:
-        flash('This spot is already free or does not exist.', 'warning')
-    return redirect(url_for('status'))
+        if request.headers.get('Accept') == 'application/json':
+            return jsonify({'message': 'This spot is already free or does not exist.'}), 400
+        else:
+            flash('This spot is already free or does not exist.', 'warning')
+            return redirect(url_for('status'))
+
+
+
+# @app.route('/notify/<int:spot_id>', methods=['POST'])
+# @login_required
+# def notify(spot_id):
+#     spot = db.session.get(ParkingSpot, spot_id)
+#     if spot and spot.status == 'Occupied':
+#         new_notification = Notification(user_id=current_user.id, spot_id=spot_id)
+#         db.session.add(new_notification)
+#         db.session.commit()
+#         flash('You will be notified when the spot is free.', 'info')
+#     else:
+#         flash('This spot is already free or does not exist.', 'warning')
+#     return redirect(url_for('status'))
+
+
     
 #@app.route('/profile', methods=['GET', 'POST'])
 #@login_required
