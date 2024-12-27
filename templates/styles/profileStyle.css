@@ -128,11 +128,19 @@ body {
     color: #333;
 }
 
-.form-control {
+.styled-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.styled-input:focus {
+    border-color: #ffc107;
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
 }
 
 .btn {
