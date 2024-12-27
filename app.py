@@ -395,6 +395,77 @@ def notify(current_user, spot_id):
             return redirect(url_for('status'))
 
 
+@app.route('/profile', methods=['GET', 'POST'])
+@api_or_login_required
+def profile(current_user):
+    if request.method == 'POST':
+        try:
+            if request.is_json:  # Obsługa żądań JSON
+                data = request.get_json()
+                print(f"Received JSON data: {data}")  # Logowanie danych
+                if not data:
+                    return jsonify({'message': 'No data provided'}), 400
+
+                current_user.first_name = data.get('first_name', current_user.first_name)
+                current_user.last_name = data.get('last_name', current_user.last_name)
+                current_user.phone_number = data.get('phone_number', current_user.phone_number)
+                current_user.address = data.get('address', current_user.address)
+                db.session.commit()
+
+                user_data = {
+                    'first_name': current_user.first_name,
+                    'last_name': current_user.last_name,
+                    'phone_number': current_user.phone_number,
+                    'address': current_user.address,
+                    'vehicles': [
+                        {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+                        for v in current_user.vehicles
+                    ],
+                    'sessions': [
+                        {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+                        for s in current_user.sessions
+                    ],
+                }
+                return jsonify({'message': 'Profile updated successfully!', 'profile': user_data}), 200
+            else:  # Obsługa żądań formularzy HTML
+                current_user.first_name = request.form.get('first_name', current_user.first_name)
+                current_user.last_name = request.form.get('last_name', current_user.last_name)
+                current_user.phone_number = request.form.get('phone_number', current_user.phone_number)
+                current_user.address = request.form.get('address', current_user.address)
+                db.session.commit()
+                flash('Profile updated successfully!', 'success')
+                return redirect(url_for('profile'))
+        except Exception as e:
+            print(f"Error in updating profile: {e}")  # Logowanie błędu
+            if request.is_json:
+                return jsonify({'message': 'Failed to update profile'}), 500
+            else:
+                flash('Failed to update profile', 'danger')
+                return redirect(url_for('profile'))
+
+    # Obsługa metody GET
+    if request.is_json:  # Żądanie JSON
+        user_data = {
+            'first_name': current_user.first_name,
+            'last_name': current_user.last_name,
+            'phone_number': current_user.phone_number,
+            'address': current_user.address,
+            'vehicles': [
+                {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+                for v in current_user.vehicles
+            ],
+            'sessions': [
+                {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+                for s in current_user.sessions
+            ],
+        }
+        return jsonify(user_data), 200
+    else:  # Renderowanie HTML
+        vehicles = current_user.vehicles
+        sessions = current_user.sessions
+        return render_template('profile.html', vehicles=vehicles, sessions=sessions)
+
+    
 
 # @app.route('/notify/<int:spot_id>', methods=['POST'])
 # @login_required
@@ -458,43 +529,43 @@ def notify(current_user, spot_id):
 #         return jsonify({'message': 'Internal Server Error'}), 500
 
 
-@app.route('/profile', methods=['GET', 'POST'])
-@api_or_login_required
-def profile(current_user):
-    if request.method == 'POST':
-        try:
-            data = request.get_json()
-            print(f"Received data: {data}")  # Logowanie danych
-            print(f"Current user: {current_user}")  # Logowanie użytkownika
+# @app.route('/profile', methods=['GET', 'POST'])
+# @api_or_login_required
+# def profile(current_user):
+#     if request.method == 'POST':
+#         try:
+#             data = request.get_json()
+#             print(f"Received data: {data}")  # Logowanie danych
+#             print(f"Current user: {current_user}")  # Logowanie użytkownika
 
-            if not data:
-                return jsonify({'message': 'No data provided'}), 400
+#             if not data:
+#                 return jsonify({'message': 'No data provided'}), 400
 
-            current_user.first_name = data.get('first_name', current_user.first_name)
-            current_user.last_name = data.get('last_name', current_user.last_name)
-            current_user.phone_number = data.get('phone_number', current_user.phone_number)
-            current_user.address = data.get('address', current_user.address)
-            db.session.commit()
+#             current_user.first_name = data.get('first_name', current_user.first_name)
+#             current_user.last_name = data.get('last_name', current_user.last_name)
+#             current_user.phone_number = data.get('phone_number', current_user.phone_number)
+#             current_user.address = data.get('address', current_user.address)
+#             db.session.commit()
 
-            # Return updated profile data
-            user_data = {
-                'first_name': current_user.first_name,
-                'last_name': current_user.last_name,
-                'phone_number': current_user.phone_number,
-                'address': current_user.address,
-                'vehicles': [
-                    {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
-                    for v in current_user.vehicles
-                ],
-                'sessions': [
-                    {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
-                    for s in current_user.sessions
-                ],
-            }
-            return jsonify({'message': 'Profile updated successfully!', 'profile': user_data}), 200
-        except Exception as e:
-            print(f"Error in updating profile: {e}")  # Logowanie błędu
-            return jsonify({'message': 'Failed to update profile'}), 500
+#             # Return updated profile data
+#             user_data = {
+#                 'first_name': current_user.first_name,
+#                 'last_name': current_user.last_name,
+#                 'phone_number': current_user.phone_number,
+#                 'address': current_user.address,
+#                 'vehicles': [
+#                     {'model': v.model, 'license_plate': v.license_plate, 'color': v.color}
+#                     for v in current_user.vehicles
+#                 ],
+#                 'sessions': [
+#                     {'id': s.id, 'entry_time': s.entry_time, 'exit_time': s.exit_time}
+#                     for s in current_user.sessions
+#                 ],
+#             }
+#             return jsonify({'message': 'Profile updated successfully!', 'profile': user_data}), 200
+#         except Exception as e:
+#             print(f"Error in updating profile: {e}")  # Logowanie błędu
+#             return jsonify({'message': 'Failed to update profile'}), 500
 
 
     # Return profile details for GET request
