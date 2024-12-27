@@ -16,11 +16,15 @@
         </button>
         <div class="menu" id="nav-menu">
             <ul>
-                <li class="menu-link">Home</li>
-                <li class="menu-link">Status</li>
-                <li class="menu-link">Sessions</li>
-                <li class="menu-link">QR Code</li>
-                <li class="menu-link">Available Spots</li>
+                {% if not current_user.is_authenticated %}
+                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                {% else %}
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">QR Code</a></li>
+                <li class="menu-link"><a href="{{ url_for('status') }}">Available Spots</a></li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
