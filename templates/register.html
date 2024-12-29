@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Rejestracja</title>
     <link rel="stylesheet" href="{{ url_for('styles', filename='registerStyle.css') }}">
 </head>
 <body>
@@ -16,14 +16,14 @@
         </button>
         <div class="menu" id="nav-menu">
             <ul>
-                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
-                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                <li class="menu-link"><a href="{{ url_for('login') }}">Logowanie</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Rejestracja</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="content-container">
-        <h1 class="text-center">Register</h1>
+        <h1 class="text-center">Rejestracja</h1>
         
         <!-- Flash messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -37,16 +37,16 @@
         {% endwith %}
 
         <form method="POST">
-            <label for="username">Username:</label>
+            <label for="username">Nazwa użytkownika:</label>
             <input type="text" id="username" name="username" required>
 
-            <label for="email">Email:</label>
+            <label for="email">E-mail:</label>
             <input type="email" id="email" name="email" required>
 
-            <label for="password">Password:</label>
+            <label for="password">Hasło:</label>
             <input type="password" id="password" name="password" required>
 
-            <button type="submit" class="btn">Register</button>
+            <button type="submit" class="btn">Zarejestruj się</button>
         </form>
     </div>
 
