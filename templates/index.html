@@ -17,41 +17,41 @@
         <div class="menu" id="nav-menu">
             <ul>
                 {% if not current_user.is_authenticated %}
-                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
-                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                <li class="menu-link"><a href="{{ url_for('login') }}">Logowanie</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Rejestracja</a></li>
                 {% else %}
-                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
-                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">QR Code</a></li>
-                <li class="menu-link"><a href="{{ url_for('status') }}">Available Spots</a></li>
-                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sesje</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">Kod QR</a></li>
+                <li class="menu-link"><a href="{{ url_for('status') }}">Dostępne miejsca</a></li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Wyloguj się</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
 
     <div class="header-container">
-        <h1>Manage your car parking sessions effortlessly.</h1>
+        <h1>Zarządzaj swoim parkowaniem bez wysiłku!</h1>
         <img src="img/car-parking.jpg" alt="cars on parking" class="rounded-image">
     </div>
 
     <div class="content-container">
-        <h2>How it works?</h2>
+        <h2>Jak to działa?</h2>
         <div class="step-container">
             <div class="step">
                 <div class="step-text">
-                    <p>You need to register/login yourself</p>
+                    <p>Zarejestruj lub zaloguj się</p>
                 </div>
             </div>
             <div class="step step-image" style="background-image: url('img/register.jpg');"></div>
             <div class="step">
                 <div class="step-text">
-                    <p>Generate QR code to open/close gate</p>
+                    <p>Wygeneruj kod QR w celu wjechania / wyjechania z parkingu</p>
                 </div>
             </div>
             <div class="step step-image" style="background-image: url('img/qrcode.jpg');"></div>
             <div class="step">
                 <div class="step-text">
-                    <p>Scan QR code</p>
+                    <p>Zeskanuj kod QR</p>
                 </div>
             </div>
             <div class="step step-image" style="background-image: url('img/scanqr.jpg');"></div>
