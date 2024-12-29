@@ -319,6 +319,7 @@ def generate_qr(current_user):
 def qr_scan():
     try:
         qr_data = request.json.get('qr_data')
+        print(f"QR Data received: {qr_data}")
         user = User.query.filter_by(current_qr=qr_data).first()
         if not user:
             return jsonify({'error': 'Invalid QR Code'}), 400
