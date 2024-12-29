@@ -17,13 +17,13 @@
         <div class="menu" id="nav-menu">
             <ul>
                 {% if not current_user.is_authenticated %}
-                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
-                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                <li class="menu-link"><a href="{{ url_for('login') }}">Logowanie</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Rejestracja</a></li>
                 {% else %}
-                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
-                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">QR Code</a></li>
-                <li class="menu-link"><a href="{{ url_for('status') }}">Available Spots</a></li>
-                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sesje</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">Kod QR</a></li>
+                <li class="menu-link"><a href="{{ url_for('status') }}">Dostępne miejsca</a></li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Wyloguj się</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -34,16 +34,16 @@
             <h2 class="text-center">Login</h2>
             <form method="POST">
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username">Nazwa użytkownika:</label>
                     <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password:</label>
+                    <label for="password">Hasło:</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="btn btn-primary btn-block">Zaloguj się</button>
             </form>
-            <p class="mt-3 text-center">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+            <p class="mt-3 text-center">Nie masz konta? <a href="{{ url_for('register') }}">Zarejestruj się!</a></p>
         </div>
     </div>
 
