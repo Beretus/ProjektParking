@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Profil użytkownika</title>
     <link rel="stylesheet" href="styles/profileStyle.css">
 </head>
 <body>
@@ -17,72 +17,72 @@
         <div class="menu" id="nav-menu">
             <ul>
                 {% if not current_user.is_authenticated %}
-                <li class="menu-link"><a href="{{ url_for('login') }}">Login</a></li>
-                <li class="menu-link"><a href="{{ url_for('register') }}">Register</a></li>
+                <li class="menu-link"><a href="{{ url_for('login') }}">Logowanie</a></li>
+                <li class="menu-link"><a href="{{ url_for('register') }}">Rejestracja</a></li>
                 {% else %}
-                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sessions</a></li>
-                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">QR Code</a></li>
-                <li class="menu-link"><a href="{{ url_for('status') }}">Available Spots</a></li>
-                <li class="menu-link"><a href="{{ url_for('logout') }}">Logout</a></li>
+                <li class="menu-link"><a href="{{ url_for('sesje') }}">Sesje</a></li>
+                <li class="menu-link"><a href="{{ url_for('generate_qr') }}">Kod QR</a></li>
+                <li class="menu-link"><a href="{{ url_for('status') }}">Dostępne miejsca</a></li>
+                <li class="menu-link"><a href="{{ url_for('logout') }}">Wyloguj się</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
 
     <div class="content-container">
-        <h1 class="text-center">User Profile</h1>
+        <h1 class="text-center">Profil użytkownika</h1>
 
         <div class="form-section">
-            <h2>Personal Information</h2>
+            <h2>Informacje</h2>
             <form method="POST">
                 <div class="form-group">
-                    <label for="first_name">First Name:</label>
+                    <label for="first_name">Imię:</label>
                     <input type="text" id="first_name" name="first_name" class="styled-input" value="{{ current_user.first_name }}">
                 </div>
                 <div class="form-group">
-                    <label for="last_name">Last Name:</label>
+                    <label for="last_name">Nazwisko:</label>
                     <input type="text" id="last_name" name="last_name" class="styled-input" value="{{ current_user.last_name }}">
                 </div>
                 <div class="form-group">
-                    <label for="phone_number">Phone Number:</label>
+                    <label for="phone_number">Numer telefonu:</label>
                     <input type="text" id="phone_number" name="phone_number" class="styled-input" value="{{ current_user.phone_number }}">
                 </div>
                 <div class="form-group">
-                    <label for="address">Address:</label>
+                    <label for="address">Adres:</label>
                     <input type="text" id="address" name="address" class="styled-input" value="{{ current_user.address }}">
                 </div>
-                <button type="submit" class="btn">Update Profile</button>
+                <button type="submit" class="btn">Zaktualizuj profil</button>
             </form>
         </div>
 
         <div class="form-section">
-            <h2>Vehicle Information</h2>
+            <h2>Informacje o pojazdach</h2>
             <form method="POST" action="{{ url_for('add_vehicle') }}">
                 <div class="form-group">
-                    <label for="model">Vehicle Model:</label>
+                    <label for="model">Model pojazdu:</label>
                     <input type="text" id="model" name="model" class="styled-input" required>
                 </div>
                 <div class="form-group">
-                    <label for="license_plate">License Plate:</label>
+                    <label for="license_plate">Numer rejestracyjny:</label>
                     <input type="text" id="license_plate" name="license_plate" class="styled-input" required>
                 </div>
                 <div class="form-group">
-                    <label for="color">Color:</label>
+                    <label for="color">Kolor:</label>
                     <input type="text" id="color" name="color" class="styled-input">
                 </div>
-                <button type="submit" class="btn">Add Vehicle</button>
+                <button type="submit" class="btn">Dodaj pojazd</button>
             </form>
         </div>
 
         <div class="table-section">
-            <h2>Vehicle List</h2>
+            <h2>Lista pojazdów</h2>
             <table class="table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Model</th>
-                        <th>License Plate</th>
-                        <th>Color</th>
+                        <th>Numer rejestracyjny</th>
+                        <th>Kolor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,14 +99,14 @@
         </div>
 
         <div class="table-section">
-            <h2>Parking History</h2>
+            <h2>Historia parkowania</h2>
             <table class="table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Entry Time</th>
-                        <th>Exit Time</th>
-                        <th>Duration</th>
+                        <th>Czas wjazdu</th>
+                        <th>Czas wyjazdu</th>
+                        <th>Czas trwania</th>
                     </tr>
                 </thead>
                 <tbody>
