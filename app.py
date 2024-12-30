@@ -302,7 +302,8 @@ def status():
 @api_or_login_required
 def generate_qr(current_user):
     username = current_user.username  
-    qr_data = f"{username}-{uuid.uuid4()}"  
+    qr_data = f"{username}-{uuid.uuid4()}"
+    qr = qrcode.make(qr_data)
     print(f"Generated QR data: {qr_data}")  # Debug: wyświetlenie qr_data w konsoli
     qr_io = io.BytesIO()
     qr.save(qr_io, 'PNG')
